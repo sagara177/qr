@@ -71,6 +71,10 @@ def main():
     parser.add_argument('--output-dir', dest='output_dir',
                         action='store', default='./out',
                         help='QR output directory (default: ./out)')
+    parser.add_argument('--qr-version', action='store', type=int, default=40,
+                        help='specify QR code version. lower version is lower \
+                        capacity, but QR image is being recognized easily. \
+                        (1 - 40, default: 40)')
     parser.add_argument('--hex', action='store_true', default=False,
                         help='encode with hex (for most QR readers, which \
                         do not support to save the binary data.)')
@@ -78,6 +82,7 @@ def main():
     args = parser.parse_args()
     output_dir = args.output_dir
     hex = args.hex
+    qr_version = args.qr_version
     data_file = args.file
 
     # creates output directory if not exist
