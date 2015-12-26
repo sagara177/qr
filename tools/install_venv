@@ -1,0 +1,7 @@
+#!/bin/bash
+
+script_path=$(cd $(dirname "${BASH_SOURCE[0]}") ; pwd)
+
+virtualenv ${script_path}/../.venv
+. ${script_path}/../.venv/bin/activate
+pip install -r ${script_path}/../requirements.txt
