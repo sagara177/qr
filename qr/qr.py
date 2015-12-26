@@ -7,6 +7,7 @@ import qrcode
 import sys
 import tempfile
 
+from argparse import RawDescriptionHelpFormatter
 from binascii import b2a_hex
 from struct import *
 
@@ -55,7 +56,19 @@ def qr_large_file_save(data_file, split_size, output_dir):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='generate QR images.')
+    description = '''Generate QR images. Large file is being splitted.
+
+* How to join splitted files (files: qr-000001.txt qr-000002.txt ..):
+  Windows: copy /b qr-*.txt outfile
+  UNIX: cat qr-*.txt > outfile
+
+* How to decode:
+  Windows: certutil -decodehex infile outfile
+  UNIX: cat qr-*.txt | perl -e 'print pack "H*", <STDIN>' > outfile
+'''
+    parser = argparse.ArgumentParser(
+        description=description,
+        formatter_class=RawDescriptionHelpFormatter)
     parser.add_argument('--output-dir', dest='output_dir',
                         action='store', default='./out',
                         help='QR output directory (default: ./out)')
