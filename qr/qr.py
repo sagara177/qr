@@ -68,7 +68,7 @@ def encode_hex(data_file):
     return hex_filename
 
 
-def qr_save(filepath, data, version=40):
+def qr_save(filepath, data, version=20):
     qr = qrcode.QRCode(
         version=version,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -82,7 +82,7 @@ def qr_save(filepath, data, version=40):
     img.save(filepath)
 
 
-def qr_large_file_save(data_file, split_size, output_dir, version=40):
+def qr_large_file_save(data_file, split_size, output_dir, version=20):
     with open(data_file, 'rb') as f:
         index = 0
         data = f.read(split_size)
@@ -113,10 +113,10 @@ def main():
     parser.add_argument('--output-dir', dest='output_dir',
                         action='store', default='./out',
                         help='QR output directory (default: ./out)')
-    parser.add_argument('--qr-version', action='store', type=int, default=40,
+    parser.add_argument('--qr-version', action='store', type=int, default=20,
                         help='specify QR code version. lower version is lower \
                         capacity, but QR image is being recognized easily. \
-                        (1 - 40, default: 40)')
+                        (1 - 40, default: 20)')
     parser.add_argument('--hex', action='store_true', default=False,
                         help='encode with hex (for most QR readers, which \
                         do not support to save the binary data.)')
