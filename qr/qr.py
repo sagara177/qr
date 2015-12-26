@@ -9,7 +9,6 @@ import tempfile
 
 from argparse import RawDescriptionHelpFormatter
 from binascii import b2a_hex
-from struct import *
 
 
 # http://www.qrcode.com/en/about/version.html
