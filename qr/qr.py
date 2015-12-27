@@ -101,11 +101,11 @@ def main():
 
 * How to join splitted files (files: qr-000001.txt qr-000002.txt ..):
   Windows: copy /b qr-*.txt outfile
-  UNIX: cat qr-*.txt > outfile
+  UNIX: cat qr-*.txt | tr -d " \t\n\r" > outfile
 
 * How to decode:
   Windows: certutil -decodehex infile outfile
-  UNIX: cat qr-*.txt | perl -e 'print pack "H*", <STDIN>' > outfile
+  UNIX: cat infile | perl -e 'print pack "H*", <STDIN>' > outfile
 '''
     parser = argparse.ArgumentParser(
         description=description,
