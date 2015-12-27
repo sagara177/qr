@@ -60,6 +60,18 @@ QR_L_MAX_BYTES = (
 IMAGE_PREFIX = 'qr'
 
 
+def is_pil(force_pil):
+    if force_pil:
+        return True
+
+    try:
+        from qrcode.image.pure import PymagingImage
+        return False
+    except:
+        pass
+    return True
+
+
 def encode_hex(data_file):
     hex_filename = tempfile.mkstemp()[1]
     with open(data_file, 'rb') as fin:
@@ -68,12 +80,22 @@ def encode_hex(data_file):
     return hex_filename
 
 
-def qr_save(filepath, data, version=20):
+def qr_save(filepath, data, version=20, is_pil=True):
+    if is_pil:
+        qr_save_pil(filepath, data, version)
+    else:
+        qr_save_pymaging(filepath, data, version)
+
+
+def qr_save_pil(filepath, data, version=20):
+    # load an image library
+    from qrcode.image.pil import PilImage
     qr = qrcode.QRCode(
         version=version,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
         box_size=10,
         border=4,
+        image_factory=PilImage,
     )
     qr.add_data(data, optimize=0)
     qr.make(fit=True)
@@ -82,7 +104,26 @@ def qr_save(filepath, data, version=20):
     img.save(filepath)
 
 
-def qr_large_file_save(data_file, split_size, output_dir, version=20):
+def qr_save_pymaging(filepath, data, version=20):
+    # load an image library
+    from qrcode.image.pure import PymagingImage
+    qr = qrcode.QRCode(
+        version=version,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+        image_factory=PymagingImage,
+    )
+    qr.add_data(data, optimize=0)
+    qr.make(fit=True)
+
+    img = qr.make_image()
+    with open(filepath, 'w') as f:
+        img.save(f)
+
+
+def qr_large_file_save(data_file, split_size, output_dir, version=20,
+                       is_pil=True):
     with open(data_file, 'rb') as f:
         index = 0
         data = f.read(split_size)
@@ -90,7 +131,7 @@ def qr_large_file_save(data_file, split_size, output_dir, version=20):
             # generate
             image_path = '%s/%s_%06d.png' % (
                 output_dir, IMAGE_PREFIX, index)
-            qr_save(image_path, data, version)
+            qr_save(image_path, data, version, is_pil)
 
             index += 1
             data = f.read(split_size)
@@ -120,12 +161,19 @@ def main():
     parser.add_argument('--hex', action='store_true', default=False,
                         help='encode with hex (for most QR readers, which \
                         do not support to save the binary data.)')
+    parser.add_argument('--force-pil', action='store_true', default=False,
+                        help='force to use PIL(Python Imaging Library) if \
+                        pymaging library is installed.')
     parser.add_argument('file', type=str, help='data file')
     args = parser.parse_args()
     output_dir = args.output_dir
     hex = args.hex
     qr_version = args.qr_version
+    force_pil = args.force_pil
     data_file = args.file
+
+    # check PIL(Python Imaging Library) or PymagingImage
+    _is_pil = is_pil(force_pil)
 
     # check QR version
     if qr_version < 1 or 40 < qr_version:
@@ -152,7 +200,8 @@ def main():
         qr_large_file_save(data_file,
                            split_size,
                            output_dir,
-                           version=qr_version)
+                           version=qr_version,
+                           is_pil=_is_pil)
     except:
         if encoded_file is not None and os.path.exists(encoded_file):
             os.remove(encoded_file)

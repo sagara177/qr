@@ -1,5 +1,11 @@
 yum -y install python-virtualenv
+
+# using Python Imaging Library (PIL)
 yum -y install libjpeg-turbo libjpeg-turbo-devel libpng libpng-devel
 yum -y install gcc
 
 . tools/install_venv
+
+
+# using Pure Python PNG (too slow, but portable)
+. tools/install_venv_pymaging

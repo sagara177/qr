@@ -1,0 +1,11 @@
+#!/bin/bash
+
+script_path=$(cd $(dirname "${BASH_SOURCE[0]}") ; pwd)
+
+virtualenv ${script_path}/../.venv
+. ${script_path}/../.venv/bin/activate
+
+# Pure Python PNG
+pip install -r ${script_path}/../requirements-pymaging.txt
+pip install git+git://github.com/ojii/pymaging.git#egg=pymaging
+pip install git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png
