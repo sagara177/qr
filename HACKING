@@ -1,5 +1,52 @@
-yum -y install python-virtualenv
-yum -y install libjpeg-turbo libjpeg-turbo-devel libpng libpng-devel
-yum -y install gcc
+How to Develop
+==============
 
-. tools/install_venv
+1. Install development tools
+  * CentOS 7
+    * using Python Imaging Library (PIL)
+    * using Pure Python PNG
+  * Mac OS X 10.10 Yosemite
+2. Activate virtualenv
+  * using Python Imaging Library (PIL)
+  * using Pure Python PNG
+
+
+Install development tools
+-------------------------
+
+### CentOS 7
+
+    $ yum -y install python-virtualenv
+
+#### using Python Imaging Library (PIL)
+
+    $ yum -y install libjpeg-turbo libjpeg-turbo-devel libpng libpng-devel
+    $ yum -y install gcc
+
+#### using Pure Python PNG (too slow, but portable)
+nothing to do.
+
+### Mac OS X 10.10 Yosemite
+
+    $ mkdir -p ~/usr/local/
+    $ vi ~/.bash_profile
+    PATH="~/usr/local/bin:${PATH}"
+    export PATH
+    PYTHONPATH="~/usr/local/lib/python2.7/site-packages"
+    export PYTHONPATH
+
+    $ . ~/.bash_profile
+    $ easy_install --prefix ~/usr/local pip-7.1.2.tar.gz
+    $ easy_install --prefix ~/usr/local virtualenv-13.1.2.tar.gz
+
+
+Activate virtualenv
+-------------------
+
+### using Python Imaging Library (PIL)
+
+    $ . tools/install_venv
+
+### using Pure Python PNG
+
+    $ . tools/install_venv_pymaging
